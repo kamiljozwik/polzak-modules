@@ -13,21 +13,28 @@ function renderBuses(buses) {
   Object.entries(buses).forEach(([brand, busList]) => {
     const section = document.createElement("section");
 
-    const brandHead = document.createElement("div");
-    brandHead.className = "mt-12 mb-6 flex justify-center w-full";
+    const brands = Object.keys(window.buses).map((brand) =>
+      brand.toLowerCase()
+    );
 
-    const logo = document.createElement("img");
-    logo.src = `https://polzak.pl/upload/img/logo/${brand.toLowerCase()}.webp`;
-    logo.alt = `brand`;
-    logo.height = 100;
-    logo.className = "h-[100px]";
+    if (brands.includes(brand)) {
+      const brandHead = document.createElement("div");
+      brandHead.className = "mt-12 mb-6 flex justify-center w-full";
 
-    brandHead.appendChild(logo);
+      const logo = document.createElement("img");
+      logo.src = `https://polzak.pl/upload/img/logo/${brand.toLowerCase()}.webp`;
+      logo.alt = `brand`;
+      logo.height = 100;
+      logo.className = "h-[100px]";
 
-    section.appendChild(brandHead);
+      brandHead.appendChild(logo);
+
+      section.appendChild(brandHead);
+    }
 
     const ul = document.createElement("ul");
-    ul.className = "flex flex-wrap gap-8 sm:gap-4 my-6 !list-none !m-0 !p-0";
+    ul.className =
+      "flex flex-wrap w-full gap-8 sm:gap-4 my-6 !list-none !m-0 !p-0";
 
     busList.forEach((bus) => {
       const li = document.createElement("li");
@@ -67,8 +74,38 @@ function renderBuses(buses) {
   container.appendChild(fragment);
 }
 
+function findObjectByLink(link) {
+  const models = Object.values(window.buses)?.flat();
+  const model = models.find((bus) => bus.link === link);
+  return model ? { [model.name]: model.versions } : {};
+}
+
 try {
-  renderBuses(window.buses ?? []);
+  const userData = window.buses;
+  const brands = Object.keys(userData).map((brand) => brand.toLowerCase());
+
+  let buses = {};
+
+  const brand =
+    window.location.pathname?.split("/")?.reverse()[1]?.toLowerCase() ?? "";
+
+  const model = window.location.pathname?.split("/c/")?.reverse()[0] ?? "";
+
+  const modelData = findObjectByLink(model);
+
+  if (modelData) {
+    buses = modelData;
+  }
+
+  if (brand && brands.includes(brand)) {
+    buses = { [brand]: userData[brand] };
+  }
+
+  if (window.location.pathname === "/") {
+    buses = userData;
+  }
+
+  renderBuses(buses);
 } catch (error) {
   console.error(error);
 }
