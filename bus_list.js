@@ -19,7 +19,8 @@ function renderBuses(buses) {
 
     if (brands.includes(brand)) {
       const brandHead = document.createElement("div");
-      brandHead.className = "mt-12 mb-6 flex justify-center w-full";
+      brandHead.className =
+        "mt-12 mb-6 flex justify-center w-full items-center gap-4";
 
       const logo = document.createElement("img");
       logo.src = `https://polzak.pl/upload/img/logo/${brand.toLowerCase()}.webp`;
@@ -28,6 +29,14 @@ function renderBuses(buses) {
       logo.className = "h-[100px]";
 
       brandHead.appendChild(logo);
+
+      if (busList[0]?.parent) {
+        const parent = document.createElement("div");
+        parent.className =
+          "text-center font-bold text-2xl text-gray-700 uppercase";
+        parent.textContent = busList[0]?.parent;
+        brandHead.appendChild(parent);
+      }
 
       section.appendChild(brandHead);
     }
@@ -44,14 +53,14 @@ function renderBuses(buses) {
       a.className = "inline-block";
 
       li.className =
-        "text-center md:text-left bg-gray-100 md:p-6 rounded shadow-md w-full sm:w-[calc(50%-1rem)] hover:shadow-lg transition";
+        "text-center md:text-left bg-gray-100 p-4 rounded shadow-md w-full sm:w-[calc(50%-2.5rem)] hover:shadow-lg transition";
 
       const img = document.createElement("img");
       img.src =
         bus.photoUrl ??
         `https://polzak.pl/upload/img/buses/${brand.toLowerCase()}_${bus.name.toLowerCase()}.webp`;
       img.alt = `${bus.name} photo`;
-      img.width = 400;
+      img.className = "max-w-[400px] max-h-[300px]";
 
       const busName = document.createElement("h3");
       busName.textContent = bus.name;
@@ -75,9 +84,28 @@ function renderBuses(buses) {
 }
 
 function findObjectByLink(link) {
-  const models = Object.values(window.buses)?.flat();
+  const all = window.buses;
+  const models = Object.values(all)?.flat();
   const model = models.find((bus) => bus.link === link);
-  return model ? { [model.name]: model.versions } : {};
+  let brand = "";
+
+  for (const property in all) {
+    const brandData = all[property].find((bus) => bus.link === link);
+
+    if (brandData) {
+      brand = property;
+      break;
+    }
+  }
+
+  return model
+    ? {
+        [brand]: model.versions.map((v) => ({
+          ...v,
+          parent: model.name,
+        })),
+      }
+    : {};
 }
 
 try {

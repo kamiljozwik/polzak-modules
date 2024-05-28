@@ -1,5 +1,3 @@
-const example = "https://polzak.pl/upload/img/buses/fiat_example.webp";
-
 window.buses = {
   fiat: [
     {
@@ -8,22 +6,32 @@ window.buses = {
       photoUrl: "https://polzak.pl/upload/img/buses/ducato3.webp",
       versions: [
         {
-          name: "2014 - 2025",
-          link: "2014-2025/234",
-          photoUrl: "https://polzak.pl/upload/img/buses/ducato3.webp",
+          name: "2022 - 2026",
+          link: "III-2022-2026/288",
+          photoUrl: "https://polzak.pl/upload/img/buses/doblo-2010-2014.webp",
         },
         {
           name: "2006 - 2013",
           link: "2006-2013/235",
-          photoUrl: "https://polzak.pl/upload/img/buses/fiat_example.webp",
+          photoUrl: "https://polzak.pl/upload/img/buses/ducato3.webp",
+        },
+        {
+          name: "2014 - 2025",
+          link: "2014-2025/234",
+          photoUrl: "https://polzak.pl/upload/img/buses/ducato3.webp",
         },
       ],
     },
     {
       name: "Doblo",
       link: "Doblo/259",
-      photoUrl: "https://polzak.pl/upload/img/buses/doblo-2010-2014.webp",
+      photoUrl: "https://polzak.pl/upload/img/buses/doblo.webp",
       versions: [
+        {
+          name: "2022 - 2026",
+          link: "III-2022-2026/288",
+          photoUrl: "https://polzak.pl/upload/img/buses/doblo.webp",
+        },
         {
           name: "2000 - 2004",
           link: "I-2000-2004/292",
@@ -42,11 +50,6 @@ window.buses = {
         {
           name: "2015 - 2022",
           link: "II-Lift-2015-2022/289",
-          photoUrl: "https://polzak.pl/upload/img/buses/doblo-2010-2014.webp",
-        },
-        {
-          name: "2022 - 2026",
-          link: "III-2022-2026/288",
           photoUrl: "https://polzak.pl/upload/img/buses/doblo-2010-2014.webp",
         },
       ],
