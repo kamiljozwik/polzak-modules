@@ -50,7 +50,7 @@ function renderBuses(buses) {
       const a = document.createElement("a");
 
       a.href = "/pl/c/" + bus.link;
-      a.className = "inline-block";
+      a.className = "inline-block w-full";
 
       li.className =
         "text-center md:text-left bg-gray-100 p-4 rounded shadow-md w-full sm:w-[calc(50%-2.5rem)] hover:shadow-lg transition";
@@ -60,7 +60,7 @@ function renderBuses(buses) {
         bus.photoUrl ??
         `https://polzak.pl/upload/img/buses/${brand.toLowerCase()}_${bus.name.toLowerCase()}.webp`;
       img.alt = `${bus.name} photo`;
-      img.className = "max-w-[400px] max-h-[300px]";
+      img.className = "w-full h-[200px] object-contain object-center";
 
       const busName = document.createElement("h3");
       busName.textContent = bus.name;
