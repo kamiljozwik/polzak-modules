@@ -22,23 +22,26 @@ function renderBuses(buses) {
       brandHead.className =
         "mt-12 mb-6 flex justify-center w-full items-center gap-4";
 
-      const logo = document.createElement("img");
-      logo.src = `https://polzak.pl/upload/img/logo/${brand.toLowerCase()}.webp`;
-      logo.alt = `brand`;
-      logo.height = 100;
-      logo.className = "h-[100px]";
-
-      brandHead.appendChild(logo);
+      const brandName = document.createElement("h3");
+      brandName.className =
+        "text-center font-bold !text-4xl text-gray-700 uppercase";
+      brandName.textContent = brand;
 
       if (busList[0]?.parent) {
-        const parent = document.createElement("div");
-        parent.className =
-          "text-center font-bold text-2xl text-gray-700 uppercase";
-        parent.textContent = busList[0]?.parent;
-        brandHead.appendChild(parent);
+        brandName.textContent = `${brand} - ${busList[0]?.parent}`;
       }
 
+      brandHead.appendChild(brandName);
+
       section.appendChild(brandHead);
+
+      if (window.location.pathname !== "/") {
+        const chooseNote = document.createElement("p");
+        chooseNote.className =
+          "font-bold text-md text-gray-700 uppercase text-center";
+        chooseNote.textContent = "Wybierz model";
+        section.appendChild(chooseNote);
+      }
     }
 
     const ul = document.createElement("ul");
@@ -114,9 +117,11 @@ try {
 
   let buses = {};
 
+  // const brand = "fiat";
   const brand =
     window.location.pathname?.split("/")?.reverse()[1]?.toLowerCase() ?? "";
 
+  // const model = "Ducato/233";
   const model = window.location.pathname?.split("/c/")?.reverse()[0] ?? "";
 
   const modelData = findObjectByLink(model);
