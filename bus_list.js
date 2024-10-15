@@ -1,4 +1,4 @@
-function renderBuses(buses) {
+function renderBuses(buses, page) {
   const container = document.getElementById("polzak-buses");
 
   if (!container) {
@@ -10,6 +10,12 @@ function renderBuses(buses) {
 
   const fragment = document.createDocumentFragment();
 
+  const notes = {
+    'root': "▼ Wybierz markę ▼",
+    'brand': "▼ Wybierz model ▼",
+    'model': "▼ Wybierz rocznik ▼",
+  }
+
   Object.entries(buses).forEach(([brand, busList]) => {
     const section = document.createElement("section");
 
@@ -20,11 +26,11 @@ function renderBuses(buses) {
     if (brands.includes(brand)) {
       const brandHead = document.createElement("div");
       brandHead.className =
-        "mt-12 mb-6 flex justify-center w-full items-center gap-4";
+        "mt-0 mb-6 flex justify-center w-full items-center gap-4";
 
       const brandName = document.createElement("h3");
       brandName.className =
-        "text-center font-bold !text-4xl text-gray-700 uppercase";
+        "text-center font-bold !text-4xl text-gray-700 uppercase !mb-0";
       brandName.textContent = brand;
 
       if (busList[0]?.parent) {
@@ -35,18 +41,19 @@ function renderBuses(buses) {
 
       section.appendChild(brandHead);
 
-      if (window.location.pathname !== "/") {
+      if (page !== 'root') {
         const chooseNote = document.createElement("p");
         chooseNote.className =
-          "font-bold text-md text-gray-700 uppercase text-center";
-        chooseNote.textContent = "Wybierz model";
+          "font-bold text-3xl text-gray-700 uppercase text-center";
+
+        chooseNote.textContent = notes[page];
         section.appendChild(chooseNote);
       }
     }
 
     const ul = document.createElement("ul");
     ul.className =
-      "flex flex-wrap w-full gap-8 sm:gap-4 my-6 !list-none !m-0 !p-0";
+      "flex flex-wrap w-full gap-8 sm:gap-4 my-6 !list-none !mb-12 !p-0";
 
     busList.forEach((bus) => {
       const li = document.createElement("li");
@@ -83,6 +90,16 @@ function renderBuses(buses) {
     fragment.appendChild(section);
   });
 
+  if (page === 'root') {
+    const rootChooseNote = document.createElement("p");
+    rootChooseNote.className =
+      "font-bold !mb-0 !mt-12 text-3xl text-gray-700 uppercase text-center";
+
+    rootChooseNote.textContent = notes[page];
+
+    container.appendChild(rootChooseNote);
+  }
+
   container.appendChild(fragment);
 }
 
@@ -103,11 +120,11 @@ function findObjectByLink(link) {
 
   return model
     ? {
-        [brand]: model.versions.map((v) => ({
-          ...v,
-          parent: model.name,
-        })),
-      }
+      [brand]: model.versions.map((v) => ({
+        ...v,
+        parent: model.name,
+      })),
+    }
     : {};
 }
 
@@ -116,29 +133,32 @@ try {
   const brands = Object.keys(userData).map((brand) => brand.toLowerCase());
 
   let buses = {};
+  let page = 'root';
 
   // const brand = "fiat";
-  const brand =
-    window.location.pathname?.split("/")?.reverse()[1]?.toLowerCase() ?? "";
+  const brand = window.location.pathname?.split("/")?.reverse()[1]?.toLowerCase() ?? "";
 
-  // const model = "Ducato/233";
+  // const model = "Doblo/259";
   const model = window.location.pathname?.split("/c/")?.reverse()[0] ?? "";
 
   const modelData = findObjectByLink(model);
 
   if (modelData) {
     buses = modelData;
+    page = 'model'
   }
 
   if (brand && brands.includes(brand)) {
     buses = { [brand]: userData[brand] };
+    page = 'brand'
   }
 
   if (window.location.pathname === "/") {
     buses = userData;
+    page = 'root'
   }
 
-  renderBuses(buses);
+  renderBuses(buses, page);
 } catch (error) {
   console.error(error);
 }
